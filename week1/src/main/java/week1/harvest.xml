@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<config charset="UTF-8">
+	<script>
+		http.client.params.soTimeout = 3000;
+		http.client.params.connectionManagerTimeout = 4000;
+		http.client.httpConnectionManager.params.connectionTimeout = 5000;
+	</script>
+	<var-def name="temp">
+		<xpath expression="//a/@href">
+			<html-to-xml>
+				<http url="${dir}" />
+			</html-to-xml>
+		</xpath>
+	</var-def>
+
+</config>
