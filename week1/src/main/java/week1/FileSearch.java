@@ -2,8 +2,6 @@ package week1;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
@@ -13,12 +11,12 @@ import java.io.IOException;
 
 public class FileSearch
 {
-	public List<SearchResult> googleSearch (String creator, String title, String[] filetypes) throws IOException {
+	public static List<SearchResult> googleSearch (String creator, String title, String[] filetypes) throws IOException {
 			
-		String query = "intitle:\"index of\"+\"parent directory\"" + creator + " " + title + "(";
+		String query = "intitle:\"index of\"+\"parent directory\" " + creator + " " + title + " (";
 		String OR = "|";
 		for (String ext : filetypes) query += ext + OR;
-		query = query.substring(0, query.length() - 1);
+		query = query.substring(0, query.length() - 1) + ")";
 		
 		// Console log.
 		System.out.println(query);
@@ -36,16 +34,20 @@ public class FileSearch
 			res += (line);
 		}
 		System.out.println(System.getProperty("user.dir"));
-		int i = 0, j = 0;
+		int i = 0;
 		LinkedList<SearchResult> links = new LinkedList<SearchResult>();
 		while ((i = res.indexOf("unescapedUrl", i)) != -1) {
 			i += 15;
 			String host = res.substring(i, res.indexOf('\"', i));
 			links.add(new SearchResult(host, "Google"));
 			i += host.length();
-			j++;
 		}
 		reader.close();
+		
+		// Console log.
+		System.out.println("Engine Results:");
+		for (SearchResult s : links) System.out.println(s.getHostLink() + " : " + s.getEngine());
+		
 		
 		for (SearchResult s : links) {
 			s.setFiles(Harvester.harvest(s.getHostLink(), title, filetypes));
@@ -54,8 +56,13 @@ public class FileSearch
 		return links;
 	}
 	
-	public List<SearchResult> musicSearch(String artist, String song) throws IOException {
+	public static List<SearchResult> musicSearch(String artist, String song) throws IOException {
 		String[] filetypes = {"mp3", "wav", "mp4", "m4a"};
 		return googleSearch(artist, song, filetypes);
+	}
+	
+	public static List<SearchResult> pdfSearch(String author, String title) throws IOException {
+		String[] filetypes = {"pdf"};
+		return googleSearch(author, title, filetypes);
 	}
 }

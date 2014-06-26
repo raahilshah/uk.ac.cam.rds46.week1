@@ -68,6 +68,12 @@
 			<artifactId>commons-httpclient</artifactId>
 			<version>3.1</version>
 		</dependency>
+		<dependency>
+			<groupId>org.jboss.resteasy</groupId>
+			<artifactId>resteasy-jackson-provider</artifactId>
+			<version>3.0.4.Final</version>
+		</dependency>
+
 	</dependencies>
 	<build>
 		<finalName>music</finalName>

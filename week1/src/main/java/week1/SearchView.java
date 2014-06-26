@@ -1,12 +1,6 @@
 package week1;
 
 import java.io.IOException;
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.net.URLEncoder;
-import java.net.URL;
-import java.net.URLConnection;
-
 import javax.ws.rs.core.Response;
 
 import java.util.List;
@@ -42,42 +36,26 @@ public class SearchView
 	@Path("/search")
 	public Response postResults(@FormParam("artist") String artist, @FormParam("song") String song) throws IOException {
 
-		String string = "<html>", q = artist + " " + song;
+		String string = "<html>";
 		string += "<head><title>Search Results</title></head>";
 		string += "<body><h1>Search Results</h1>";
-		String[] filetypes = {"mp3", "wav", "mp4", "m4a"};
-		@SuppressWarnings("deprecation")
-		String temp = "intitle:\"index of\"+\"parent directory\"" + q + " mp3", query = URLEncoder.encode(temp);
-		URL url = new URL(
-				"https://ajax.googleapis.com/ajax/services/search/web?v=1.0&"
-						+ "q=" + query + "&userip=USERS-IP-ADDRESS");
-		URLConnection connection = url.openConnection();
-		String line;
-		String res = new String();
-		BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-		while((line = reader.readLine()) != null) {
-			res += (line);
-		}
-		System.out.println(System.getProperty("user.dir"));
-		int i = 0, j = 0;
-		String[] links = new String[4];
-		while ((i = res.indexOf("unescapedUrl", i)) != -1) {
-			i += 15;
-			links[j] = (res.substring(i, res.indexOf('\"', i)));
-			i += links[j].length();
-			j++;
-		}
-		reader.close();
+		
+		List<SearchResult> results = FileSearch.musicSearch(artist.trim(), song.trim());
+		
 		boolean noResults = true;
-		for (String s : links) {
-			List<String> l = Harvester.harvest(s, song, filetypes);
-			if (!l.isEmpty()) noResults = false;
-			for (String x : l) {
-				string += "<a href=\"" + x + "\">" + x + "</a><br>";
-			}
+		for (SearchResult r : results) {
+			if (!r.noFiles()) noResults = false; 
 		}
 		
 		if (noResults) string += "No results.";
+		else {
+			for (SearchResult r : results) {
+				for (String link : r.getFiles()) {
+					string += "<a href=\"" + link + "\">" + link + "</a>";
+					string += "</br>";
+				}
+			}
+		}
 
 		string += "</body></html>";
 		return Response.status(200).entity(string).build();

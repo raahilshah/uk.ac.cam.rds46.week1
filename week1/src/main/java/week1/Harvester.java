@@ -14,16 +14,20 @@ import java.io.FileNotFoundException;
  */
 public class Harvester
 {
-	
+
 	public static LinkedList<String> harvest(String url, String title, String[] filetypes) {
 		String[] keywords = title.toLowerCase().split("[ ,;:]");
 		LinkedList<String> list = new LinkedList<String>();
 		if (url == null) return list;
 		try {
-			ScraperConfiguration config = new ScraperConfiguration("harvest.xml");
+
+			ScraperConfiguration config = new ScraperConfiguration("/Users/Raahil/Documents/git/uk.ac.cam.rds46.week1/week1/src/main/java/week1/harvest.xml");
 			Scraper scraper = new Scraper(config, "/");
 			scraper.addVariableToContext("dir", url);
+
+			// Console log.
 			System.out.println(((Variable) scraper.getContext().getVar("dir")).toString());
+
 			scraper.setDebug(true);
 			scraper.execute();
 			Variable links = (Variable) scraper.getContext().get("temp");
@@ -45,7 +49,7 @@ public class Harvester
 			return null;
 		}
 		catch (HttpException httpe) {
-			System.out.println("Http Exception");
+			System.out.println("Timeout");
 			return new LinkedList<String>();
 		}
 		catch (IllegalArgumentException illegal) {
