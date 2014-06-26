@@ -3,20 +3,18 @@ package week1;
 import java.io.IOException;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
-import java.net.SocketTimeoutException;
 import java.net.URLEncoder;
 import java.net.URL;
 import java.net.URLConnection;
 
 import javax.ws.rs.core.Response;
 
-import java.util.ArrayList;
-import java.net.HttpURLConnection;
+import java.util.List;
 
 import javax.ws.rs.*;
 
 @Path("/")
-public class Search
+public class SearchView
 {
 	@GET
 	public Response displaySearch() {
@@ -42,12 +40,13 @@ public class Search
 
 	@POST
 	@Path("/search")
-	public Response getResults(@FormParam("artist") String artist, @FormParam("song") String song) throws IOException {
+	public Response postResults(@FormParam("artist") String artist, @FormParam("song") String song) throws IOException {
 
 		String string = "<html>", q = artist + " " + song;
 		string += "<head><title>Search Results</title></head>";
 		string += "<body><h1>Search Results</h1>";
 		String[] filetypes = {"mp3", "wav", "mp4", "m4a"};
+		@SuppressWarnings("deprecation")
 		String temp = "intitle:\"index of\"+\"parent directory\"" + q + " mp3", query = URLEncoder.encode(temp);
 		URL url = new URL(
 				"https://ajax.googleapis.com/ajax/services/search/web?v=1.0&"
@@ -71,7 +70,7 @@ public class Search
 		reader.close();
 		boolean noResults = true;
 		for (String s : links) {
-			ArrayList<String> l = Harvester.harvest(s, song, filetypes);
+			List<String> l = Harvester.harvest(s, song, filetypes);
 			if (!l.isEmpty()) noResults = false;
 			for (String x : l) {
 				string += "<a href=\"" + x + "\">" + x + "</a><br>";

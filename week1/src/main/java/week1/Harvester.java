@@ -3,8 +3,7 @@ package week1;
 import org.webharvest.definition.ScraperConfiguration;
 import org.webharvest.exception.HttpException;
 
-import java.util.ArrayList;
-import java.util.StringTokenizer;
+import java.util.LinkedList;
 
 import org.webharvest.runtime.Scraper;
 import org.webharvest.runtime.variables.Variable;
@@ -16,12 +15,12 @@ import java.io.FileNotFoundException;
 public class Harvester
 {
 	
-	public static ArrayList<String> harvest(String url, String title, String[] filetypes) {
+	public static LinkedList<String> harvest(String url, String title, String[] filetypes) {
 		String[] keywords = title.toLowerCase().split("[ ,;:]");
-		ArrayList<String> list = new ArrayList<String>();
+		LinkedList<String> list = new LinkedList<String>();
 		if (url == null) return list;
 		try {
-			ScraperConfiguration config = new ScraperConfiguration("/Users/Raahil/Documents/workspace/week1/src/main/java/week1/harvest.xml");
+			ScraperConfiguration config = new ScraperConfiguration("harvest.xml");
 			Scraper scraper = new Scraper(config, "/");
 			scraper.addVariableToContext("dir", url);
 			System.out.println(((Variable) scraper.getContext().getVar("dir")).toString());
@@ -42,16 +41,16 @@ public class Harvester
 			return list;
 		}
 		catch (FileNotFoundException fnfe) {
-			System.out.println("File not found.");
+			System.out.println("Scraper Config File not found.");
 			return null;
 		}
 		catch (HttpException httpe) {
 			System.out.println("Http Exception");
-			return new ArrayList<String>();
+			return new LinkedList<String>();
 		}
 		catch (IllegalArgumentException illegal) {
 			System.out.println("Illegal argument.");
-			return new ArrayList<String>();
+			return new LinkedList<String>();
 		}
 	}
 }
