@@ -3,7 +3,6 @@ package week1;
 import java.io.IOException;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
-import java.net.MalformedURLException;
 import java.net.SocketTimeoutException;
 import java.net.URLEncoder;
 import java.net.URL;
@@ -83,44 +82,5 @@ public class Search
 
 		string += "</body></html>";
 		return Response.status(200).entity(string).build();
-	}
-
-	private String processLink(URL u, String song) throws IOException {
-		if (u == null) return "Null Link";
-		String ans = "", res = "";
-
-		try {
-			HttpURLConnection huc = (HttpURLConnection) u.openConnection();
-			HttpURLConnection.setFollowRedirects(false);
-			huc.setConnectTimeout(15 * 1000);
-			huc.setRequestMethod("GET");
-			huc.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows; U; Windows NT 6.0; en-US; rv:1.9.1.2) Gecko/20090729 Firefox/3.5.2 (.NET CLR 3.5.30729)");
-			huc.connect();
-			huc.getInputStream();
-			String line;
-			BufferedReader reader = new BufferedReader(new InputStreamReader(huc.getInputStream()));
-			while((line = reader.readLine()) != null) {
-				res += (line);
-			}
-		}
-		catch(SocketTimeoutException ste) {
-			return "";
-		}
-		catch(IOException ioe) { return ""; }
-		String lRes = res.toLowerCase();
-
-		if (!lRes.contains("index of")) return "No Index of";
-		int i = 0;
-		while ((i = lRes.indexOf("href=\"", i)) != -1) {
-			i += 6;
-			int j = lRes.indexOf("\"", i);
-			String file = lRes.substring(i, j);
-			if (file.contains(song) && file.contains(".mp3")) {
-				String f = u.toString() + res.substring(i, j);
-				ans += "<a href=\"" + (f) + "\">" + (f) + "</a><br>";
-			}
-			i += file.length();
-		}
-		return ans;
 	}
 }

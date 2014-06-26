@@ -10,7 +10,9 @@ import org.webharvest.runtime.Scraper;
 import org.webharvest.runtime.variables.Variable;
 
 import java.io.FileNotFoundException;
-
+/*
+ * Scrapes a webpage located at 'url' to search for file links matching '.*title.*.filetype'. 
+ */
 public class Harvester
 {
 	
