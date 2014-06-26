@@ -8,11 +8,13 @@ import java.net.URLEncoder;
 import java.util.LinkedList;
 import java.util.List;
 import java.io.IOException;
+import javax.ws.rs.*;
 
-public class FileSearch
+@Path("/json")
+public class SearchService
 {
-	public static List<SearchResult> googleSearch (String creator, String title, String[] filetypes) throws IOException {
-			
+	public List<SearchResult> googleSearch (String creator, String title, String[] filetypes) throws IOException {
+		if (creator == null || title == null) return new LinkedList<SearchResult>();	
 		String query = "intitle:\"index of\"+\"parent directory\" " + creator + " " + title + " (";
 		String OR = "|";
 		for (String ext : filetypes) query += ext + OR;
@@ -56,12 +58,14 @@ public class FileSearch
 		return links;
 	}
 	
-	public static List<SearchResult> musicSearch(String artist, String song) throws IOException {
+	@GET
+	@Path("/musicsearch")
+	public List<SearchResult> musicSearch(@QueryParam("artist") String artist, @QueryParam("song") String song) throws IOException {
 		String[] filetypes = {"mp3", "wav", "mp4", "m4a"};
 		return googleSearch(artist, song, filetypes);
 	}
 	
-	public static List<SearchResult> pdfSearch(String author, String title) throws IOException {
+	public List<SearchResult> pdfSearch(String author, String title) throws IOException {
 		String[] filetypes = {"pdf"};
 		return googleSearch(author, title, filetypes);
 	}

@@ -33,14 +33,15 @@ public class SearchView
 	}
 
 	@POST
-	@Path("/search")
+	@Path("/musicsearch")
 	public Response postResults(@FormParam("artist") String artist, @FormParam("song") String song) throws IOException {
 
 		String string = "<html>";
 		string += "<head><title>Search Results</title></head>";
 		string += "<body><h1>Search Results</h1>";
 		
-		List<SearchResult> results = FileSearch.musicSearch(artist.trim(), song.trim());
+		SearchService ss = new SearchService();
+		List<SearchResult> results = ss.musicSearch(artist.trim(), song.trim());
 		
 		boolean noResults = true;
 		for (SearchResult r : results) {

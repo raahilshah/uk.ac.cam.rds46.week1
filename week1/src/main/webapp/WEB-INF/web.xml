@@ -10,7 +10,7 @@
 		<param-value>true</param-value>
 	</context-param>
  
-	<!-- this need same with resteasy servlet url-pattern -->
+	<!-- this should be the same as the resteasy servlet url-pattern -->
 	<context-param>
 		<param-name>resteasy.servlet.mapping.prefix</param-name>
 		<param-value>/service</param-value>
@@ -28,9 +28,10 @@
 			org.jboss.resteasy.plugins.server.servlet.HttpServletDispatcher
 		</servlet-class>
 	</servlet>
- 
+	
 	<servlet-mapping>
 		<servlet-name>resteasy-servlet</servlet-name>
 		<url-pattern>/service/*</url-pattern>
 	</servlet-mapping>
+	
 </web-app>

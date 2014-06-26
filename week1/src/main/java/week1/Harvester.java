@@ -16,9 +16,9 @@ public class Harvester
 {
 
 	public static LinkedList<String> harvest(String url, String title, String[] filetypes) {
-		String[] keywords = title.toLowerCase().split("[ ,;:]");
 		LinkedList<String> list = new LinkedList<String>();
-		if (url == null) return list;
+		if (url == null || title == null) return list;
+		String[] keywords = title.toLowerCase().split("[ ,;:]");
 		try {
 
 			ScraperConfiguration config = new ScraperConfiguration("/Users/Raahil/Documents/git/uk.ac.cam.rds46.week1/week1/src/main/java/week1/harvest.xml");
