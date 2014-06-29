@@ -39,6 +39,6 @@ public class SearchResult
 		this.files = files;
 	}
 	
-	public boolean noFiles() { return files.isEmpty(); }
+	public boolean noFiles() { return files == null || files.isEmpty(); }
 	
 }

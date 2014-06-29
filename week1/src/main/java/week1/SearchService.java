@@ -8,6 +8,7 @@ import java.net.URLEncoder;
 import java.util.LinkedList;
 import java.util.List;
 import java.io.IOException;
+import org.webharvest.exception.HttpException;
 import javax.ws.rs.*;
 
 @Path("/json")
@@ -52,7 +53,13 @@ public class SearchService
 		
 		
 		for (SearchResult s : links) {
+			try {
 			s.setFiles(Harvester.harvest(s.getHostLink(), title, filetypes));
+			}
+			catch (HttpException httpe) {
+				s.setFiles(null);
+				s.setTimeout(true);
+			}
 		}
 		
 		return links;
@@ -60,6 +67,7 @@ public class SearchService
 	
 	@GET
 	@Path("/musicsearch")
+	@Produces("application/json")
 	public List<SearchResult> musicSearch(@QueryParam("artist") String artist, @QueryParam("song") String song) throws IOException {
 		String[] filetypes = {"mp3", "wav", "mp4", "m4a"};
 		return googleSearch(artist, song, filetypes);

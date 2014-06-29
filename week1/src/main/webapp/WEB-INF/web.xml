@@ -4,7 +4,7 @@
 
 <web-app>
   <display-name>Archetype Created Web Application</display-name>
-  <!-- Auto scan REST service -->
+  	<!-- Auto scan REST service -->
 	<context-param>
 		<param-name>resteasy.scan</param-name>
 		<param-value>true</param-value>

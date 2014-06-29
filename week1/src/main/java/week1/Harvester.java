@@ -15,7 +15,7 @@ import java.io.FileNotFoundException;
 public class Harvester
 {
 
-	public static LinkedList<String> harvest(String url, String title, String[] filetypes) {
+	public static LinkedList<String> harvest(String url, String title, String[] filetypes) throws HttpException {
 		LinkedList<String> list = new LinkedList<String>();
 		if (url == null || title == null) return list;
 		String[] keywords = title.toLowerCase().split("[ ,;:]");
@@ -48,13 +48,9 @@ public class Harvester
 			System.out.println("Scraper Config File not found.");
 			return null;
 		}
-		catch (HttpException httpe) {
-			System.out.println("Timeout");
-			return new LinkedList<String>();
-		}
 		catch (IllegalArgumentException illegal) {
 			System.out.println("Illegal argument.");
-			return new LinkedList<String>();
+			return null;
 		}
 	}
 }

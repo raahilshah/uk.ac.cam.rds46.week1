@@ -7,6 +7,7 @@
 	<version>0.0.1-SNAPSHOT</version>
 	<name>Music Maven Webapp</name>
 	<url>http://maven.apache.org</url>
+
 	<repositories>
 		<repository>
 			<id>JBoss repository</id>
@@ -20,6 +21,10 @@
 			<id>maven-repository-1</id>
 			<url>http://repo1.maven.org/maven2/</url>
 		</repository>
+		<repository>
+			<id>htmleasy</id>
+			<url>http://htmleasy-maven.googlecode.com/svn/trunk/</url>
+		</repository>
 	</repositories>
 	<dependencies>
 		<dependency>
@@ -31,7 +36,7 @@
 		<dependency>
 			<groupId>org.jboss.resteasy</groupId>
 			<artifactId>resteasy-jaxrs</artifactId>
-			<version>2.2.1.GA</version>
+			<version>3.0.6.Final</version>
 		</dependency>
 		<dependency>
 			<groupId>log4j</groupId>
@@ -68,12 +73,21 @@
 			<artifactId>commons-httpclient</artifactId>
 			<version>3.1</version>
 		</dependency>
-<!-- 		<dependency>
+		<dependency>
 			<groupId>org.jboss.resteasy</groupId>
 			<artifactId>resteasy-jackson2-provider</artifactId>
 			<version>3.0.4.Final</version>
-		</dependency> -->
-
+		</dependency>
+		<dependency>
+			<groupId>org.webjars</groupId>
+			<artifactId>angularjs</artifactId>
+			<version>1.2.17</version>
+		</dependency>
+		<dependency>
+			<groupId>com.googlecode.htmleasy</groupId>
+			<artifactId>htmleasy</artifactId>
+			<version>0.7</version>
+		</dependency>
 	</dependencies>
 	<build>
 		<finalName>search</finalName>
