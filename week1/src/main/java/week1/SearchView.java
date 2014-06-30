@@ -38,11 +38,9 @@ public class SearchView
 
 	@POST
 	@Path("/musicsearch")
-	public Response postResults(@FormParam("artist") String artist, @FormParam("song") String song) throws IOException {
+	public Response postResults(@QueryParam("artist") String artist, @QueryParam("song") String song) throws IOException {
 
-		String string = "<html>";
-		string += "<head><title>Search Results</title></head>";
-		string += "<body><h1>Search Results</h1>";
+		String string = "";
 
 		SearchService ss = new SearchService();
 		List<SearchResult> results = ss.musicSearch(artist.trim(), song.trim());
@@ -62,8 +60,6 @@ public class SearchView
 					}
 			}
 		}
-
-		string += "</body></html>";
 		return Response.status(200).entity(string).build();
 	}
 }

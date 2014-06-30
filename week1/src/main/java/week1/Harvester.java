@@ -21,6 +21,7 @@ public class Harvester
 		String[] keywords = title.toLowerCase().split("[ ,;:]");
 		try {
 
+			// NEED HELP.
 			ScraperConfiguration config = new ScraperConfiguration("/Users/Raahil/Documents/git/uk.ac.cam.rds46.week1/week1/src/main/java/week1/harvest.xml");
 			Scraper scraper = new Scraper(config, "/");
 			scraper.addVariableToContext("dir", url);

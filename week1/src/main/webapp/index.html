@@ -1,0 +1,101 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html ng-app=app>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title></title>
+<meta name="keywords" content="" />
+<meta name="description" content="A music file search service." />
+<link href="http://fonts.googleapis.com/css?family=Didact+Gothic"
+	rel="stylesheet"
+/>
+<link href="default.css" rel="stylesheet" type="text/css" media="all" />
+<link href="fonts.css" rel="stylesheet" type="text/css" media="all" />
+</head>
+<body ng-controller="ResultsController">
+	<script type="text/javascript" src="angular.js"></script>
+	<script type="text/javascript">
+		var app = angular.module('app', []);
+
+		app.controller('ResultsController', function($scope, $http) {
+			
+			$scope.action = function (a, b) {
+				$scope.first = true;
+				$scope.show = false;
+				$http({
+					method : 'get',
+					url : 'service/json/musicsearch?artist='+a+'&song='+b
+				}).success(function(data) {
+					$scope.results = data;
+					$scope.show=true;
+				}).error(function(data) {
+					$scope.results = 'Error.'
+				});
+			};
+		});
+		
+		app.controller('ScrollController', function ($scope, $location, $anchorScroll) {
+			  $scope.gotoResults = function (){
+			    // set the location.hash to the id of
+			    // the element you wish to scroll to.
+			    $location.hash('location');
+
+			    // call $anchorScroll()
+			    $anchorScroll();
+			  };
+		});
+	</script>
+	<div id="header-wrapper">
+		<div id="header" class="container">
+			<div id="menu">
+				<ul>
+					<li class="active"><a href="#" accesskey="1" title="">Music
+							Search</a></li>
+					<li><a href="#" accesskey="2" title="">Pdf Search</a></li>
+					<li><a href="#" accesskey="3" title="">About</a></li>
+				</ul>
+			</div>
+		</div>
+		<div id="banner" class="container">
+			<div class="title">
+				<h2>Music Search</h2>
+			</div>
+			<div>
+				<form>
+					<div>
+						<input type="text" name="a" placeholder="Artist" size=100
+							value="" ng-model="artist"
+						></input>
+					</div>
+					<div>
+						<input type="text" name="s" placeholder="Song" size=100
+							value="" ng-model="song"
+						></input>
+					</div>
+					<div ng-controller="ScrollController">
+						<button class="button" ng-click="action(artist, song); gotoResults()">Search</button>
+					</div>
+				</form>
+			</div>
+		</div>
+
+	</div>
+	<div id="wrapper" ng-show="first">
+		<div id="three-column" class="container">
+			<div class="title">
+				<h2 id="location">Search Results</h2>
+			</div>
+			<div ng-show="show" ng-repeat="result in results">
+				<div ng-if="result.files.length > 0">
+					<div ng-repeat="file in result.files">
+						<a href="{{ file }}">{{ file }}</a>
+					</div>
+				</div>
+			</div>
+			<div ng-hide="show">
+				<p>Loading...</p>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

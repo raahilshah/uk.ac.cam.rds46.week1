@@ -8,7 +8,9 @@ import java.net.URLEncoder;
 import java.util.LinkedList;
 import java.util.List;
 import java.io.IOException;
+
 import org.webharvest.exception.HttpException;
+
 import javax.ws.rs.*;
 
 @Path("/json")
@@ -61,6 +63,9 @@ public class SearchService
 				s.setTimeout(true);
 			}
 		}
+		
+		// Console log.
+		System.out.println("--Done--");
 		
 		return links;
 	}
