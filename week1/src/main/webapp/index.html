@@ -14,37 +14,62 @@
 </head>
 <body ng-controller="ResultsController">
 	<script type="text/javascript" src="angular.js"></script>
+
+
 	<script type="text/javascript">
 		var app = angular.module('app', []);
 
-		app.controller('ResultsController', function($scope, $http) {
-			
-			$scope.action = function (a, b) {
-				$scope.first = true;
-				$scope.show = false;
-				$http({
-					method : 'get',
-					url : 'service/json/musicsearch?artist='+a+'&song='+b
-				}).success(function(data) {
-					$scope.results = data;
-					$scope.show=true;
-				}).error(function(data) {
-					$scope.results = 'Error.'
-				});
+		app
+				.controller(
+						'ResultsController',
+						function($scope, $http) {
+
+							$scope.action = function(a, b) {
+								$scope.first = true;
+								$scope.show = false;
+								$scope.showRel = false;
+								$http(
+										{
+											method : 'get',
+											url : 'service/json/musicsearch?artist='
+													+ a + '&song=' + b
+										}).success(function(data) {
+									$scope.results = data;
+									$scope.show = true;
+								}).error(function(data) {
+									$scope.results = 'Error.'
+								});
+								$http(
+										{
+											method : 'get',
+											url : 'http://ws.audioscrobbler.com/2.0/?method=track.getsimilar&artist='
+													+ a
+													+ '&track='
+													+ b
+													+ '&api_key=d03e58b2c37b049287c671bc7f451632&format=json'
+										}).success(function(data) {
+									$scope.related = data;
+									$scope.showRel = true;
+								}).error(function(data) {
+									$scope.related = 'Error.'
+								});
+							};
+						});
+
+		app.controller('ScrollController', function($scope, $location,
+				$anchorScroll) {
+			$scope.gotoResults = function() {
+				// set the location.hash to the id of
+				// the element you wish to scroll to.
+				$location.hash('location');
+
+				// call $anchorScroll()
+				$anchorScroll();
 			};
 		});
-		
-		app.controller('ScrollController', function ($scope, $location, $anchorScroll) {
-			  $scope.gotoResults = function (){
-			    // set the location.hash to the id of
-			    // the element you wish to scroll to.
-			    $location.hash('location');
-
-			    // call $anchorScroll()
-			    $anchorScroll();
-			  };
-		});
 	</script>
+
+
 	<div id="header-wrapper">
 		<div id="header" class="container">
 			<div id="menu">
@@ -63,37 +88,58 @@
 			<div>
 				<form>
 					<div>
-						<input type="text" name="a" placeholder="Artist" size=100
-							value="" ng-model="artist"
+						<input type="text" name="a" placeholder="Artist" size=100 value=""
+							ng-model="artist"
 						></input>
 					</div>
 					<div>
-						<input type="text" name="s" placeholder="Song" size=100
-							value="" ng-model="song"
+						<input type="text" name="s" placeholder="Song" size=100 value=""
+							ng-model="song"
 						></input>
 					</div>
 					<div ng-controller="ScrollController">
-						<button class="button" ng-click="action(artist, song); gotoResults()">Search</button>
+						<button class="button"
+							ng-click="action(artist, song); gotoResults()"
+						>Search</button>
 					</div>
 				</form>
 			</div>
 		</div>
 
 	</div>
-	<div id="wrapper" ng-show="first">
-		<div id="three-column" class="container">
-			<div class="title">
-				<h2 id="location">Search Results</h2>
-			</div>
-			<div ng-show="show" ng-repeat="result in results">
-				<div ng-if="result.files.length > 0">
-					<div ng-repeat="file in result.files">
-						<a href="{{ file }}">{{ file }}</a>
+	<div ng-show="first">
+		<div id="wrapper">
+			<div id="three-column" class="container">
+				<div class="title">
+					<h2 id="location">Search Results</h2>
+				</div>
+				<div ng-show="show" ng-repeat="result in results">
+					<div ng-if="result.files.length > 0">
+						<div ng-repeat="file in result.files">
+							<p><a href="{{ file }}">{{ file + count}}</a></p>
+						</div>
 					</div>
 				</div>
+				<div ng-hide="show">
+					<p>Loading...</p>
+				</div>
 			</div>
-			<div ng-hide="show">
-				<p>Loading...</p>
+		</div>
+		<div id="last-wrapper">
+			<div id="three-column" class="container">
+				<div class="title">
+					<h2 id="location">Related Music</h2>
+				</div>
+				<div ng-show="showRel"
+					ng-repeat="item in related.similartracks.track"
+				>
+					<p>
+						<strong>{{item.artist.name}}</strong>, <em>{{item.name}}</em>
+					</p>
+				</div>
+				<div ng-hide="showRel">
+					<p>Loading...</p>
+				</div>
 			</div>
 		</div>
 	</div>
